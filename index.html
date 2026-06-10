@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Une petite question...</title>
     <style>
-        /* Des boutons plus grands, parfaits pour les pouces sur téléphone */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
@@ -16,7 +15,6 @@
             align-items: center;
             text-align: center;
             overflow: hidden;
-            position: relative;
         }
 
         .card {
@@ -40,7 +38,7 @@
             justify-content: center;
             gap: 20px;
             height: 50px;
-            position: relative;
+            align-items: center;
         }
 
         button {
@@ -50,7 +48,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            touch-action: manipulation; /* Optimise le tactile */
+            touch-action: manipulation;
         }
 
         #btn-oui {
@@ -61,7 +59,8 @@
         #btn-non {
             background-color: #84a59d;
             color: white;
-            position: absolute;
+            /* On le laisse en position normale au début */
+            position: static; 
             transition: left 0.1s ease, top 0.1s ease;
         }
 
@@ -101,35 +100,36 @@
         const questionSection = document.getElementById('question-section');
         const successSection = document.getElementById('success-section');
 
-        // Fonction magique pour mobile : s'active au premier contact du doigt (touchstart)
         function fuir(e) {
-            // Empêche le clic normal de se déclencher immédiatement
             e.preventDefault(); 
             
-            // On calcule des coordonnées aléatoires sur tout l'écran
-            const x = Math.random() * (window.innerWidth - btnNon.offsetWidth - 20) + 10;
-            const y = Math.random() * (window.innerHeight - btnNon.offsetHeight - 20) + 10;
+            // Largeur et hauteur max pour pas que le bouton sorte de l'écran
+            const maxX = window.innerWidth - btnNon.offsetWidth - 20;
+            const maxY = window.innerHeight - btnNon.offsetHeight - 20;
 
+            const x = Math.random() * maxX + 10;
+            const y = Math.random() * maxY + 10;
+
+            // C'est ici qu'on l'arrache de sa position de base pour le faire voler
             btnNon.style.position = 'fixed';
             btnNon.style.left = `${x}px`;
             btnNon.style.top = `${y}px`;
         }
 
-        // On écoute le tactile ET la souris au cas où
+        // Détection du toucher et de la souris
         btnNon.addEventListener('touchstart', fuir);
         btnNon.addEventListener('mouseover', fuir);
 
-        // Sécurité ultime : si la personne a des reflets de ninja et réussit à cliquer
+        // Sécurité anti-triche
         btnNon.addEventListener('click', (e) => {
             e.preventDefault();
-            alert("Erreur système : Bouton cassé. Redirection vers la seule option logique...");
+            alert("Erreur système : Bouton corrompu. Choix alternatif automatique...");
             validerOui();
         });
 
         function validerOui() {
             questionSection.style.display = 'none';
             successSection.style.display = 'block';
-            // On fait disparaître le bouton Non s'il flottait sur l'écran
             btnNon.style.display = 'none'; 
         }
     </script>
